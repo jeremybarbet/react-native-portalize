@@ -31,3 +31,53 @@ export const MyApp = () => (
   </Host>
 );
 ```
+
+**Example with `react-native-modalize` and `react-navigation`**
+
+```tsx
+import React from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Modalize } from 'react-native-modalize';
+import { Host, Portal } from 'react-native-portalize';
+
+const Tab = createBottomTabNavigator();
+
+const ExamplesScreen = () => {
+  const modalRef = useRef<Modalize>(null);
+
+  const onOpen = () => {
+    modalRef.current?.open();
+  };
+
+  return (
+    <>
+      <TouchableOpacity onPress={onOpen}>
+        <Text>Open the modal</Text>
+      </TouchableOpacity>
+
+      <Portal>
+        <Modalize ref={modalRef} />
+      </Portal>
+    </>
+  );
+};
+
+const SettingsScreen = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Settings screen</Text>
+  </View>
+);
+
+export const App = () => (
+  <NavigationContainer>
+    <Host>
+      <Tab.Navigator>
+        <Tab.Screen name="Examples" component={ExamplesScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </Host>
+  </NavigationContainer>
+);
+```
