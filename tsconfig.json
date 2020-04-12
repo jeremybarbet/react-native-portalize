@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "lib/",
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "jsx": "react",
+    "lib": ["es2017", "dom"],
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "pretty": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedParameters": true
+  },
+  "include": ["src"]
+}
