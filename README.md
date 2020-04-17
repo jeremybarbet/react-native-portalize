@@ -58,7 +58,7 @@ const ExamplesScreen = () => {
       </TouchableOpacity>
 
       <Portal>
-        <Modalize ref={modalRef} />
+        <Modalize ref={modalRef}>...your content</Modalize>
       </Portal>
     </>
   );
