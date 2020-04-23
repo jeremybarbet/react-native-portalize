@@ -1,6 +1,6 @@
 {
   "name": "react-native-portalize",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Render anything on top of the rest",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
