@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 
 import { Manager, IManager } from './Manager';
 
 interface IProps {
   children: React.ReactNode;
+  style?: ViewStyle;
 }
 
 export interface IProvider {
@@ -81,11 +82,11 @@ export class Host extends React.Component<IProps> {
   };
 
   render() {
-    const { children } = this.props;
+    const { children, style } = this.props;
 
     return (
       <Context.Provider value={{ mount: this.mount, update: this.update, unmount: this.unmount }}>
-        <View style={{ flex: 1 }} collapsable={false} pointerEvents="box-none">
+        <View style={[{ flex: 1 }, style]} collapsable={false} pointerEvents="box-none">
           {children}
         </View>
 
