@@ -13,9 +13,10 @@ yarn.lock
 #
 .expo
 .vscode/
-docs/
-examples/
 src/
-post-version.sh
+.eslintrc.js
+.prettierignore
 .watchmanconfig
+README.md
+renovate.json
 tsconfig.json
