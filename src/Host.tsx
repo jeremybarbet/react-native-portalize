@@ -1,27 +1,27 @@
-import * as React from 'react';
+import React, { ReactNode, Component, createContext } from 'react';
 import { View, ViewStyle } from 'react-native';
 
 import { Manager, IManager } from './Manager';
 
 interface IProps {
-  children: React.ReactNode;
+  children: ReactNode;
   style?: ViewStyle;
 }
 
 export interface IProvider {
-  mount(children: React.ReactNode): number;
-  update(key: number, children: React.ReactNode): void;
+  mount(children: ReactNode): number;
+  update(key: number, children: ReactNode): void;
   unmount(key: number): void;
 }
 
-export const Context = React.createContext<IProvider | null>(null);
+export const Context = createContext<IProvider | null>(null);
 
-export class Host extends React.Component<IProps> {
-  nextKey: number = 0;
-  queue: { type: 'mount' | 'update' | 'unmount'; key: number; children?: React.ReactNode }[] = [];
+export class Host extends Component<IProps> {
+  nextKey = 0;
+  queue: { type: 'mount' | 'update' | 'unmount'; key: number; children?: ReactNode }[] = [];
   manager: IManager | null = null;
 
-  componentDidMount() {
+  componentDidMount(): void {
     const manager = this.manager;
     const queue = this.queue;
 
@@ -44,7 +44,7 @@ export class Host extends React.Component<IProps> {
     }
   }
 
-  mount = (children: React.ReactNode) => {
+  mount = (children: ReactNode): number => {
     const key = this.nextKey++;
 
     if (this.manager) {
@@ -56,7 +56,7 @@ export class Host extends React.Component<IProps> {
     return key;
   };
 
-  update = (key: number, children: React.ReactNode) => {
+  update = (key: number, children: ReactNode): void => {
     if (this.manager) {
       this.manager.update(key, children);
     } else {
@@ -73,7 +73,7 @@ export class Host extends React.Component<IProps> {
     }
   };
 
-  unmount = (key: number) => {
+  unmount = (key: number): void => {
     if (this.manager) {
       this.manager.unmount(key);
     } else {
@@ -81,7 +81,7 @@ export class Host extends React.Component<IProps> {
     }
   };
 
-  render() {
+  render(): JSX.Element {
     const { children, style } = this.props;
 
     return (
@@ -90,7 +90,7 @@ export class Host extends React.Component<IProps> {
           {children}
         </View>
 
-        <Manager ref={el => (this.manager = el)} />
+        <Manager ref={(el): any => (this.manager = el)} />
       </Context.Provider>
     );
   }

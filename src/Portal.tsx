@@ -1,14 +1,14 @@
-import * as React from 'react';
+import React, { ReactNode } from 'react';
 
 import { Consumer } from './Consumer';
 import { Context } from './Host';
 
 interface IPortalProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const Portal = ({ children }: IPortalProps) => (
+export const Portal = ({ children }: IPortalProps): JSX.Element => (
   <Context.Consumer>
-    {manager => <Consumer manager={manager}>{children}</Consumer>}
+    {(manager): any => <Consumer manager={manager}>{children}</Consumer>}
   </Context.Consumer>
 );

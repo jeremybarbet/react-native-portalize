@@ -1,16 +1,16 @@
-import * as React from 'react';
+import { ReactNode, Component } from 'react';
 
 import { IProvider } from './Host';
 
 interface IProps {
-  children: React.ReactNode;
+  children: ReactNode;
   manager: IProvider | null;
 }
 
-export class Consumer extends React.Component<IProps> {
+export class Consumer extends Component<IProps> {
   key: any = undefined;
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     this.checkManager();
 
     await Promise.resolve();
@@ -18,25 +18,25 @@ export class Consumer extends React.Component<IProps> {
     this.key = this.props.manager?.mount(this.props.children);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(): void {
     this.checkManager();
 
     this.props.manager?.update(this.key, this.props.children);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.checkManager();
 
     this.props.manager?.unmount(this.key);
   }
 
-  checkManager() {
+  checkManager(): void {
     if (!this.props.manager) {
       throw new Error('No portal manager defined');
     }
   }
 
-  render() {
+  render(): null {
     return null;
   }
 }
