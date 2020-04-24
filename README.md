@@ -81,3 +81,31 @@ export const App = () => (
   </NavigationContainer>
 );
 ```
+
+## Props
+
+### Host
+
+- `children`
+
+A React node that will be most likely wrapping your whole app.
+
+| Type | Required |
+| ---- | -------- |
+| node | Yes      |
+
+- `style`
+
+Define the style of the Host component.
+
+| Type  | Required |
+| ----- | -------- |
+| style | No       |
+
+### Portal
+
+The React node you want to display on top of the rest.
+
+| Type | Required |
+| ---- | -------- |
+| node | Yes      |

@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
+    'react/display-name': 'off',
   },
   settings: {
     react: {

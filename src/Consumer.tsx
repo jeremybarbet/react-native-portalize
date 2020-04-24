@@ -1,42 +1,48 @@
-import { ReactNode, Component } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import { IProvider } from './Host';
 
-interface IProps {
+interface IConsumerProps {
   children: ReactNode;
   manager: IProvider | null;
 }
 
-export class Consumer extends Component<IProps> {
-  key: any = undefined;
+export const Consumer = ({ children, manager }: IConsumerProps): null => {
+  let key: number | undefined = undefined;
 
-  async componentDidMount(): Promise<void> {
-    this.checkManager();
+  const checkManager = (): void => {
+    if (!manager) {
+      throw new Error('No portal manager defined');
+    }
+  };
+
+  const handleInit = async (): Promise<void> => {
+    checkManager();
 
     await Promise.resolve();
 
-    this.key = this.props.manager?.mount(this.props.children);
-  }
+    key = manager?.mount(children);
+  };
 
-  componentDidUpdate(): void {
-    this.checkManager();
+  useEffect(() => {
+    if (key) {
+      checkManager();
 
-    this.props.manager?.update(this.key, this.props.children);
-  }
-
-  componentWillUnmount(): void {
-    this.checkManager();
-
-    this.props.manager?.unmount(this.key);
-  }
-
-  checkManager(): void {
-    if (!this.props.manager) {
-      throw new Error('No portal manager defined');
+      manager?.update(key, children);
     }
-  }
+  }, [children, manager]);
 
-  render(): null {
-    return null;
-  }
-}
+  useEffect(() => {
+    handleInit();
+
+    return (): void => {
+      if (key) {
+        checkManager();
+
+        manager?.unmount(key);
+      }
+    };
+  }, []);
+
+  return null;
+};

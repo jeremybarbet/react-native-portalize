@@ -9,6 +9,6 @@ interface IPortalProps {
 
 export const Portal = ({ children }: IPortalProps): JSX.Element => (
   <Context.Consumer>
-    {(manager): any => <Consumer manager={manager}>{children}</Consumer>}
+    {(manager): JSX.Element => <Consumer manager={manager}>{children}</Consumer>}
   </Context.Consumer>
 );
