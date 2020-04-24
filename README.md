@@ -96,13 +96,15 @@ A React node that will be most likely wrapping your whole app.
 
 - `style`
 
-Define the style of the Host component.
+Optional props to define the style of the Host component.
 
 | Type  | Required |
 | ----- | -------- |
 | style | No       |
 
 ### Portal
+
+- `children`
 
 The React node you want to display on top of the rest.
 
