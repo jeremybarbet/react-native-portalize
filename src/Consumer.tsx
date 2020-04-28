@@ -1,9 +1,9 @@
-import { ReactNode, useEffect } from 'react';
+import * as React from 'react';
 
 import { IProvider } from './Host';
 
 interface IConsumerProps {
-  children: ReactNode;
+  children: React.ReactNode;
   manager: IProvider | null;
 }
 
@@ -24,7 +24,7 @@ export const Consumer = ({ children, manager }: IConsumerProps): null => {
     key = manager?.mount(children);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (key) {
       checkManager();
 
@@ -32,7 +32,7 @@ export const Consumer = ({ children, manager }: IConsumerProps): null => {
     }
   }, [children, manager]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     handleInit();
 
     return (): void => {

@@ -1,27 +1,31 @@
-import React, { ReactNode, createContext, useRef, useEffect } from 'react';
+import * as React from 'react';
 import { View, ViewStyle } from 'react-native';
 
 import { Manager, IManagerHandles } from './Manager';
 
 interface IHostProps {
-  children: ReactNode;
+  children: React.ReactNode;
   style?: ViewStyle;
 }
 
 export interface IProvider {
-  mount(children: ReactNode): number;
-  update(key: number, children: ReactNode): void;
+  mount(children: React.ReactNode): number;
+  update(key: number, children: React.ReactNode): void;
   unmount(key: number): void;
 }
 
-export const Context = createContext<IProvider | null>(null);
+export const Context = React.createContext<IProvider | null>(null);
 
 export const Host = ({ children, style }: IHostProps): JSX.Element => {
-  const managerRef = useRef<IManagerHandles>(null);
-  const queue: { type: 'mount' | 'update' | 'unmount'; key: number; children?: ReactNode }[] = [];
+  const managerRef = React.useRef<IManagerHandles>(null);
+  const queue: {
+    type: 'mount' | 'update' | 'unmount';
+    key: number;
+    children?: React.ReactNode;
+  }[] = [];
   let nextKey = 0;
 
-  useEffect(() => {
+  React.useEffect(() => {
     while (queue.length && managerRef.current) {
       const action = queue.pop();
 
@@ -41,7 +45,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     }
   }, []);
 
-  const mount = (children: ReactNode): number => {
+  const mount = (children: React.ReactNode): number => {
     const key = nextKey++;
 
     if (managerRef.current) {
@@ -53,7 +57,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     return key;
   };
 
-  const update = (key: number, children: ReactNode): void => {
+  const update = (key: number, children: React.ReactNode): void => {
     if (managerRef.current) {
       managerRef.current.update(key, children);
     } else {
