@@ -3,8 +3,8 @@ import { View, StyleSheet } from 'react-native';
 
 export interface IManagerHandles {
   mount(key: number, children: React.ReactNode): void;
-  update(key: number, children: React.ReactNode): void;
-  unmount(key: number): void;
+  update(key?: number, children?: React.ReactNode): void;
+  unmount(key?: number): void;
 }
 
 export const Manager = React.forwardRef((_, ref): any => {

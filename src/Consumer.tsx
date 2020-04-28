@@ -8,7 +8,7 @@ interface IConsumerProps {
 }
 
 export const Consumer = ({ children, manager }: IConsumerProps): null => {
-  let key: number | undefined = undefined;
+  const [key, setKey] = React.useState<number | undefined>(undefined);
 
   const checkManager = (): void => {
     if (!manager) {
@@ -16,31 +16,22 @@ export const Consumer = ({ children, manager }: IConsumerProps): null => {
     }
   };
 
-  const handleInit = async (): Promise<void> => {
+  const handleInit = (): void => {
     checkManager();
-
-    await Promise.resolve();
-
-    key = manager?.mount(children);
+    setKey(manager?.mount(children));
   };
 
   React.useEffect(() => {
-    if (key) {
-      checkManager();
-
-      manager?.update(key, children);
-    }
+    checkManager();
+    manager?.update(key, children);
   }, [children, manager]);
 
   React.useEffect(() => {
     handleInit();
 
     return (): void => {
-      if (key) {
-        checkManager();
-
-        manager?.unmount(key);
-      }
+      checkManager();
+      manager?.unmount(key);
     };
   }, []);
 

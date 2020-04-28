@@ -10,8 +10,8 @@ interface IHostProps {
 
 export interface IProvider {
   mount(children: React.ReactNode): number;
-  update(key: number, children: React.ReactNode): void;
-  unmount(key: number): void;
+  update(key?: number, children?: React.ReactNode): void;
+  unmount(key?: number): void;
 }
 
 export const Context = React.createContext<IProvider | null>(null);
