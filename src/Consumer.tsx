@@ -8,7 +8,7 @@ interface IConsumerProps {
 }
 
 export const Consumer = ({ children, manager }: IConsumerProps): null => {
-  const [key, setKey] = React.useState<number | undefined>(undefined);
+  const key = React.useRef<number | undefined>(undefined);
 
   const checkManager = (): void => {
     if (!manager) {
@@ -18,12 +18,12 @@ export const Consumer = ({ children, manager }: IConsumerProps): null => {
 
   const handleInit = (): void => {
     checkManager();
-    setKey(manager?.mount(children));
+    key.current = manager?.mount(children);
   };
 
   React.useEffect(() => {
     checkManager();
-    manager?.update(key, children);
+    manager?.update(key.current, children);
   }, [children, manager]);
 
   React.useEffect(() => {
@@ -31,7 +31,7 @@ export const Consumer = ({ children, manager }: IConsumerProps): null => {
 
     return (): void => {
       checkManager();
-      manager?.unmount(key);
+      manager?.unmount(key.current);
     };
   }, []);
 
