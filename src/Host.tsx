@@ -23,7 +23,6 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     key: number;
     children?: React.ReactNode;
   }[] = [];
-  let nextKey = 0;
 
   React.useEffect(() => {
     while (queue.length && managerRef.current) {
@@ -46,7 +45,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
   }, []);
 
   const mount = (children: React.ReactNode): number => {
-    const key = nextKey++;
+    const key = Date.now();
 
     if (managerRef.current) {
       managerRef.current.mount(key, children);
