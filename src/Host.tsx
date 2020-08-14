@@ -45,7 +45,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
   }, []);
 
   const mount = (children: React.ReactNode): number => {
-    const key = Date.now();
+    const key = `portal_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
     if (managerRef.current) {
       managerRef.current.mount(key, children);
