@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, ViewStyle } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
 
 import { Manager, IManagerHandles } from './Manager';
 
@@ -45,8 +44,36 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     }
   }, []);
 
+  //Keep track of all the keys we've generated to ensure uniqueness
+  let usedKeys: Array<string> = [];
+
+  //Makes a magical random key
+  const keyGenerator = (): string => {
+    return `portalize_${Math.random().toString(36).substr(2, 16)}-${Math.random()
+      .toString(36)
+      .substr(2, 16)}-${Math.random().toString(36).substr(2, 16)}`;
+  };
+
+  //Keeps making new keys until a unique one has been found
+  const getNewKey = (): string => {
+    let foundUniqueKey = false;
+    let newKey = '';
+    let tries = 0;
+    while (!foundUniqueKey && tries < 5) {
+      //limit number of tries to stop endless loop of pain
+      tries++;
+      newKey = keyGenerator();
+      if (!usedKeys.includes(newKey)) {
+        foundUniqueKey = true;
+        usedKeys.push(newKey);
+      }
+    }
+
+    return newKey;
+  };
+
   const mount = (children: React.ReactNode): string => {
-    const key = `portalize_${uuidv4()}`;
+    const key = getNewKey();
 
     if (managerRef.current) {
       managerRef.current.mount(key, children);
@@ -77,6 +104,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
   const unmount = (key: string): void => {
     if (managerRef.current) {
       managerRef.current.unmount(key);
+      usedKeys = usedKeys.filter(k => k !== key); //remove our key to make it 'available' again
     } else {
       queue.push({ type: 'unmount', key });
     }
