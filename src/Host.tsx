@@ -46,7 +46,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
   }, []);
 
   const mount = (children: React.ReactNode): string => {
-    const key = uuidv4();
+    const key = `portalize_${uuidv4()}`;
 
     if (managerRef.current) {
       managerRef.current.mount(key, children);
