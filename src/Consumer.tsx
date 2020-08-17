@@ -8,7 +8,7 @@ interface IConsumerProps {
 }
 
 export const Consumer = ({ children, manager }: IConsumerProps): null => {
-  const key = React.useRef<number | undefined>(undefined);
+  const key = React.useRef<string | undefined>(undefined);
 
   const checkManager = (): void => {
     if (!manager) {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, ViewStyle } from 'react-native';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Manager, IManagerHandles } from './Manager';
 
@@ -9,9 +10,9 @@ interface IHostProps {
 }
 
 export interface IProvider {
-  mount(children: React.ReactNode): number;
-  update(key?: number, children?: React.ReactNode): void;
-  unmount(key?: number): void;
+  mount(children: React.ReactNode): string;
+  update(key?: string, children?: React.ReactNode): void;
+  unmount(key?: string): void;
 }
 
 export const Context = React.createContext<IProvider | null>(null);
@@ -20,7 +21,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
   const managerRef = React.useRef<IManagerHandles>(null);
   const queue: {
     type: 'mount' | 'update' | 'unmount';
-    key: number;
+    key: string;
     children?: React.ReactNode;
   }[] = [];
 
@@ -44,8 +45,8 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     }
   }, []);
 
-  const mount = (children: React.ReactNode): number => {
-    const key = Date.now();
+  const mount = (children: React.ReactNode): string => {
+    const key = `portalize_${uuidv4()}`;
 
     if (managerRef.current) {
       managerRef.current.mount(key, children);
@@ -56,7 +57,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     return key;
   };
 
-  const update = (key: number, children: React.ReactNode): void => {
+  const update = (key: string, children: React.ReactNode): void => {
     if (managerRef.current) {
       managerRef.current.update(key, children);
     } else {
@@ -73,7 +74,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     }
   };
 
-  const unmount = (key: number): void => {
+  const unmount = (key: string): void => {
     if (managerRef.current) {
       managerRef.current.unmount(key);
     } else {
