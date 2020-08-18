@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, ViewStyle } from 'react-native';
 
-import { useGeneratedKey, removeKey } from './hooks/useGeneratedKey';
+import { useKey } from './hooks/useKey';
 import { Manager, IManagerHandles } from './Manager';
 
 interface IHostProps {
@@ -24,6 +24,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     key: string;
     children?: React.ReactNode;
   }[] = [];
+  const { generateKey, removeKey } = useKey();
 
   React.useEffect(() => {
     while (queue.length && managerRef.current) {
@@ -46,7 +47,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
   }, []);
 
   const mount = (children: React.ReactNode): string => {
-    const key = useGeneratedKey();
+    const key = generateKey();
 
     if (managerRef.current) {
       managerRef.current.mount(key, children);
