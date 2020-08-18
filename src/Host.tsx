@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, ViewStyle } from 'react-native';
+
 import { useGeneratedKey, removeKey } from './hooks/useGeneratedKey';
 import { Manager, IManagerHandles } from './Manager';
 
