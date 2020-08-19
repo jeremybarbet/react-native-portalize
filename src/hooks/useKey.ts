@@ -30,7 +30,8 @@ export const useKey = (): IUseKey => {
         foundUniqueKey = true;
       }
     }
-    //will only run if exited while loop without finding a unique key
+
+    // will only run if exited while loop without finding a unique key
     if (!foundUniqueKey) {
       newKey = `portalize_${Date.now()}_${Math.floor(Math.random() * 1000)}`; //fallback method
     }
