@@ -25,6 +25,7 @@ export const useKey = (): IUseKey => {
       // limit number of tries to stop endless loop of pain
       tries++;
       newKey = keyGenerator();
+
       if (!usedKeys.current.includes(newKey)) {
         foundUniqueKey = true;
       }
