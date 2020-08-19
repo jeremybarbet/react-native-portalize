@@ -20,6 +20,7 @@ export const useKey = (): IUseKey => {
     let foundUniqueKey = false;
     let newKey = '';
     let tries = 0;
+
     while (!foundUniqueKey && tries < 3) {
       //limit number of tries to stop endless loop of pain
       tries++;
