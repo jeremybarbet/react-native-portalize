@@ -10,8 +10,8 @@ interface IHostProps {
 }
 
 export interface IProvider {
-  mount(children: React.ReactNode): string;
-  update(key?: string, children?: React.ReactNode): void;
+  mount(children: React.ReactNode, style?: ViewStyle): string;
+  update(key?: string, children?: React.ReactNode, style?: ViewStyle): void;
   unmount(key?: string): void;
 }
 
@@ -23,6 +23,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     type: 'mount' | 'update' | 'unmount';
     key: string;
     children?: React.ReactNode;
+    style?: ViewStyle;
   }[] = [];
   const { generateKey, removeKey } = useKey();
 
@@ -33,10 +34,10 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
       if (action) {
         switch (action.type) {
           case 'mount':
-            managerRef.current?.mount(action.key, action.children);
+            managerRef.current?.mount(action.key, action.children, action.style);
             break;
           case 'update':
-            managerRef.current?.update(action.key, action.children);
+            managerRef.current?.update(action.key, action.children, action.style);
             break;
           case 'unmount':
             managerRef.current?.unmount(action.key);
@@ -46,23 +47,23 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     }
   }, []);
 
-  const mount = (children: React.ReactNode): string => {
+  const mount = (children: React.ReactNode, style?: ViewStyle): string => {
     const key = generateKey();
 
     if (managerRef.current) {
-      managerRef.current.mount(key, children);
+      managerRef.current.mount(key, children, style);
     } else {
-      queue.push({ type: 'mount', key, children });
+      queue.push({ type: 'mount', key, children, style });
     }
 
     return key;
   };
 
-  const update = (key: string, children: React.ReactNode): void => {
+  const update = (key: string, children: React.ReactNode, style?: ViewStyle): void => {
     if (managerRef.current) {
-      managerRef.current.update(key, children);
+      managerRef.current.update(key, children, style);
     } else {
-      const op = { type: 'mount' as 'mount', key, children };
+      const op = { type: 'mount' as 'mount', key, children, style };
       const index = queue.findIndex(
         o => o.type === 'mount' || (o.type === 'update' && o.key === key),
       );
