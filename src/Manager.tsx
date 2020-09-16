@@ -1,27 +1,29 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 
 export interface IManagerHandles {
-  mount(key: string, children: React.ReactNode): void;
-  update(key?: string, children?: React.ReactNode): void;
+  mount(key: string, children: React.ReactNode, style?: ViewStyle): void;
+  update(key?: string, children?: React.ReactNode, style?: ViewStyle): void;
   unmount(key?: string): void;
 }
 
 export const Manager = React.forwardRef((_, ref): any => {
-  const [portals, setPortals] = React.useState<{ key: string; children: React.ReactNode }[]>([]);
+  const [portals, setPortals] = React.useState<
+    { key: string; children: React.ReactNode; style?: ViewStyle }[]
+  >([]);
 
   React.useImperativeHandle(
     ref,
     (): IManagerHandles => ({
-      mount(key: string, children: React.ReactNode): void {
-        setPortals(prev => [...prev, { key, children }]);
+      mount(key: string, children: React.ReactNode, style?: ViewStyle): void {
+        setPortals(prev => [...prev, { key, children, style }]);
       },
 
-      update(key: string, children: React.ReactNode): void {
+      update(key: string, children: React.ReactNode, style?: ViewStyle): void {
         setPortals(prev =>
           prev.map(item => {
             if (item.key === key) {
-              return { ...item, children };
+              return { ...item, children, style };
             }
 
             return item;
@@ -35,12 +37,12 @@ export const Manager = React.forwardRef((_, ref): any => {
     }),
   );
 
-  return portals.map(({ key, children }, index: number) => (
+  return portals.map(({ key, children, style }, index: number) => (
     <View
       key={`react-native-portalize-${key}-${index}`}
       collapsable={false}
       pointerEvents="box-none"
-      style={StyleSheet.absoluteFill}
+      style={[StyleSheet.absoluteFill, style]}
     >
       {children}
     </View>

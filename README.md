@@ -111,3 +111,11 @@ The React node you want to display on top of the rest.
 | Type | Required |
 | ---- | -------- |
 | node | Yes      |
+
+- `style`
+
+Optional props to define the style of the Portal component.
+
+| Type  | Required |
+| ----- | -------- |
+| style | No       |

@@ -1,13 +1,15 @@
 import * as React from 'react';
+import { ViewStyle } from 'react-native';
 
 import { IProvider } from './Host';
 
 interface IConsumerProps {
   children: React.ReactNode;
   manager: IProvider | null;
+  style?: ViewStyle;
 }
 
-export const Consumer = ({ children, manager }: IConsumerProps): null => {
+export const Consumer = ({ children, manager, style }: IConsumerProps): null => {
   const key = React.useRef<string | undefined>(undefined);
 
   const checkManager = (): void => {
@@ -18,13 +20,13 @@ export const Consumer = ({ children, manager }: IConsumerProps): null => {
 
   const handleInit = (): void => {
     checkManager();
-    key.current = manager?.mount(children);
+    key.current = manager?.mount(children, style);
   };
 
   React.useEffect(() => {
     checkManager();
-    manager?.update(key.current, children);
-  }, [children, manager]);
+    manager?.update(key.current, children, style);
+  }, [children, manager, style]);
 
   React.useEffect(() => {
     handleInit();
