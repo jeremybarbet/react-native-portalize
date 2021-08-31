@@ -9,6 +9,12 @@ interface IHostProps {
   style?: ViewStyle;
 }
 
+interface IPortalAction {
+  type: 'mount' | 'update' | 'unmount';
+  key: string;
+  children?: React.ReactNode;
+}
+
 export interface IProvider {
   mount(children: React.ReactNode): string;
   update(key?: string, children?: React.ReactNode): void;
@@ -19,16 +25,12 @@ export const Context = React.createContext<IProvider | null>(null);
 
 export const Host = ({ children, style }: IHostProps): JSX.Element => {
   const managerRef = React.useRef<IManagerHandles>(null);
-  const queue: {
-    type: 'mount' | 'update' | 'unmount';
-    key: string;
-    children?: React.ReactNode;
-  }[] = [];
+  const queueRef = React.useRef<IPortalAction[]>([]);
   const { generateKey, removeKey } = useKey();
 
   React.useEffect(() => {
-    while (queue.length && managerRef.current) {
-      const action = queue.pop();
+    while (queueRef.current?.length && managerRef.current) {
+      const action = queueRef.current?.pop();
 
       if (action) {
         switch (action.type) {
@@ -52,7 +54,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
     if (managerRef.current) {
       managerRef.current.mount(key, children);
     } else {
-      queue.push({ type: 'mount', key, children });
+      queueRef.current?.push({ type: 'mount', key, children });
     }
 
     return key;
@@ -61,16 +63,17 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
   const update = (key: string, children: React.ReactNode): void => {
     if (managerRef.current) {
       managerRef.current.update(key, children);
-    } else {
+    } else if (queueRef.current) {
       const op = { type: 'mount' as 'mount', key, children };
-      const index = queue.findIndex(
-        o => o.type === 'mount' || (o.type === 'update' && o.key === key),
-      );
+      const index =
+        queueRef.current?.findIndex(
+          o => o.type === 'mount' || (o.type === 'update' && o.key === key),
+        ) ?? -1;
 
       if (index > -1) {
-        queue[index] = op;
+        queueRef.current[index] = op;
       } else {
-        queue.push(op);
+        queueRef.current.push(op);
       }
     }
   };
@@ -80,7 +83,7 @@ export const Host = ({ children, style }: IHostProps): JSX.Element => {
       managerRef.current.unmount(key);
       removeKey(key);
     } else {
-      queue.push({ type: 'unmount', key });
+      queueRef.current?.push({ type: 'unmount', key });
     }
   };
 
